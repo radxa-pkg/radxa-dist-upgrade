@@ -38,8 +38,10 @@ system_upgrade() {
 }
 
 pre_system_upgrade() {
-    local soc="$(tr $"\0" $"\n" < /proc/device-tree/compatible | tail -n 1 | cut -d "," -f 2)" pin="10"
-    local vendor="$(tr $"\0" $"\n" < /proc/device-tree/compatible | tail -n 1 | cut -d "," -f 1)"
+    local vendor soc pin
+    pin="10"
+    soc="$(tr $"\0" $"\n" < /proc/device-tree/compatible | tail -n 1 | cut -d "," -f 2)"
+    vendor="$(tr $"\0" $"\n" < /proc/device-tree/compatible | tail -n 1 | cut -d "," -f 1)"
 
     if [[ -e /etc/apt/sources.list ]]
     then
@@ -51,7 +53,7 @@ pre_system_upgrade() {
         mv "$source" "$source.bak"
     done
 
-    if grep -q -e "rk3588" -e "rk3588s2" -e "rk3528a" <<< "$soc" && [[ "$RELEASE"=="bookworm" ]]
+    if grep -q -e "rk3588" -e "rk3588s2" -e "rk3528a" <<< "$soc" && [[ "$RELEASE" == "bookworm" ]]
     then
         pin="80"
         apt remove 8852be-dkms
@@ -67,11 +69,11 @@ pre_system_upgrade() {
 
     if [ -n "$soc" ]
     then
-        echo "Creating "$pin"-radxa-"$soc".list"
-        tee "/etc/apt/sources.list.d/"$pin"-radxa-"$soc".list" <<< "deb [signed-by=/usr/share/keyrings/radxa-archive-keyring.gpg] https://radxa-repo.github.io/"$soc"-"$RELEASE"/ "$soc"-"$RELEASE" main"
+        echo "Creating $pin-radxa-$soc.list"
+        tee "/etc/apt/sources.list.d/$pin-radxa-$soc.list" <<< "deb [signed-by=/usr/share/keyrings/radxa-archive-keyring.gpg] https://radxa-repo.github.io/$soc-$RELEASE/ $soc-$RELEASE main"
     fi
 
-    for source in "/usr/share/radxa-dist-upgrade/"$RELEASE"/"*.list
+    for source in "/usr/share/radxa-dist-upgrade/$RELEASE/"*.list
     do
         echo "$source"
         cp "$source" /etc/apt/sources.list.d/

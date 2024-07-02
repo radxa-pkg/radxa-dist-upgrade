@@ -3,8 +3,8 @@ set -e
 
 RELEASE="$1"
 
-
-source "/usr/lib/radxa-dist-upgrade/"$RELEASE".sh"
+# shellcheck source=usr/lib/radxa-dist-upgrade/bookworm.sh
+source "/usr/lib/radxa-dist-upgrade/$RELEASE.sh"
 
 check_release_"$RELEASE"
 system_upgrade
