@@ -1,0 +1,4 @@
+usr/lib /usr/
+usr/sbin /usr/
+usr/share/radxa-dist-upgrade usr/share/
+usr/share/man/man8/radxa-dist-upgrade.8 usr/share/man/man8/

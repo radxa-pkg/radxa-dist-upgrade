@@ -1,0 +1,2 @@
+git clone https://github.com/radxa-pkg/radxa-dist-upgrade
+git checkout 88392e0e8f187778ece4119c13d21502dffa2735

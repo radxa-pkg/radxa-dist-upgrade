@@ -1,0 +1,20 @@
+Source: radxa-dist-upgrade
+Maintainer: "Radxa Computer Co., Ltd" <dev@radxa.com>
+Section: misc
+Priority: optional
+Standards-Version: 4.6.0
+Build-Depends: debhelper (>=12~),
+               devscripts,
+               lintian,
+
+Package: radxa-dist-upgrade
+Architecture: all
+Section: misc
+Priority: optional
+Depends: ${misc:Depends},
+Description: Radxa OS upgrade tools,
+ which allow users to upgrade their
+ Radxa devices to the latest version
+ of the operating system. The tools
+ include scripts and instructions for
+ performing the upgrade process.
