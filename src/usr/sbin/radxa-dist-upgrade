@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -e
+
+RELEASE="$1"
+
+# shellcheck source=src/usr/lib/radxa-dist-upgrade/bookworm.sh
+source "/usr/lib/radxa-dist-upgrade/$RELEASE.sh"
+
+check_release_"$RELEASE"
+system_upgrade
+pre_system_upgrade "$RELEASE"
+system_upgrade
