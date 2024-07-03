@@ -89,3 +89,12 @@ pre_system_upgrade() {
         return 1
     fi
 }
+
+post_system_upgrade() {
+    local soc
+    soc="$(tr $"\0" $"\n" < /proc/device-tree/compatible | tail -n 1 | cut -d "," -f 2)"
+    if ! grep -q "rk3588" <<< "$soc" && [[ "$RELEASE" == "bookworm" ]]
+    then
+        apt-get update && apt-get install gdm
+    fi
+}

@@ -8,5 +8,6 @@ source "/usr/lib/radxa-dist-upgrade/$RELEASE.sh"
 
 check_release_"$RELEASE"
 system_upgrade
-pre_system_upgrade "$RELEASE"
+pre_system_upgrade
 system_upgrade
+post_system_upgrade
