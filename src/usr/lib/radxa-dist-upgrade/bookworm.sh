@@ -53,10 +53,9 @@ pre_system_upgrade() {
         mv "$source" "$source.bak"
     done
 
-    if grep -q -e "rk3588" -e "rk3588s2" -e "rk3528a" <<< "$soc" && [[ "$RELEASE" == "bookworm" ]]
+    if grep -q -e "rk3588" -e "rk3528a" <<< "$soc"
     then
         pin="80"
-        apt remove 8852be-dkms
     else
         soc="$vendor"
     fi
@@ -78,6 +77,11 @@ pre_system_upgrade() {
         echo "$source"
         cp "$source" /etc/apt/sources.list.d/
     done
+
+    if [[ "$RELEASE" == "bookworm" ]]
+    then
+        apt-get remove 8852be-dkms
+    fi
 
     if ! apt-get update && ! apt-get install dpkg
     then
