@@ -15,9 +15,6 @@ Section: misc
 Priority: optional
 Depends: librtui (>=0.1.4),
          ${misc:Depends},
-Description: Radxa OS upgrade tools,
- which allow users to upgrade their
- Radxa devices to the latest version
- of the operating system. The tools
- include scripts and instructions for
- performing the upgrade process.
+Description: Radxa OS upgrade tools, which allow users to upgrade their
+ Radxa devices to the latest version of the operating system. The tools
+ include scripts and instructions for performing the upgrade process.
