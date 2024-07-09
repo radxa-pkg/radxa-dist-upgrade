@@ -95,7 +95,6 @@ setup_source() {
 }
 
 save_source_list() {
-
     if yesno "Rename all sources.list to *.bak"
     then
         if [[ -e /etc/apt/sources.list ]]
@@ -154,6 +153,12 @@ post_system_upgrade() {
         msgbox "Please run \"System upgrade\" first."
         return
     fi
+
+    if yesno "Remove all autoremove packages?"
+    then
+        apt-get autoremove
+    fi
+
     if ! grep -q "rk3588" <<< "$(get_product_soc)" && [[ "$RELEASE" == "bookworm" ]]
     then
         apt-get update && apt-get install gdm
