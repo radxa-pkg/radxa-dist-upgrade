@@ -63,6 +63,7 @@ system_upgrade() {
         return
     fi
     rsetup system_update
+    apt-get autoremove
     STEP="4"
 }
 
@@ -89,11 +90,6 @@ post_system_upgrade() {
     then
         msgbox "Please run \"System upgrade\" first."
         return
-    fi
-
-    if yesno "Remove all autoremove packages?"
-    then
-        apt-get autoremove
     fi
 
     if ! grep -q "rk3588" <<< "$(get_product_soc)" && [[ "$RELEASE" == "bookworm" ]]
