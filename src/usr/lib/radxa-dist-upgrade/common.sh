@@ -136,3 +136,14 @@ save_source_list() {
     done
     msgbox "Source list saved."
 }
+
+system_upgrade() {
+    if [[ "$STEP" != "3" ]] && [[ "$STEP" != "0" ]]
+    then
+        msgbox "Please run \"Pre system upgrade\" first."
+        return
+    fi
+    rsetup system_update
+    apt-get autoremove
+    STEP="4"
+}

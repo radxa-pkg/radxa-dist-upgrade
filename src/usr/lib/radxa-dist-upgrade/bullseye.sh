@@ -56,17 +56,6 @@ setup_source_list() {
     STEP="2"
 }
 
-system_upgrade() {
-    if [[ "$STEP" != "3" ]] && [[ "$STEP" != "0" ]]
-    then
-        msgbox "Please run \"Pre system upgrade\" first."
-        return
-    fi
-    rsetup system_update
-    apt-get autoremove
-    STEP="4"
-}
-
 pre_system_upgrade() {
     if [[ "$STEP" != "2" ]]
     then
