@@ -2,13 +2,6 @@
 
 RELEASE="bookworm"
 
-checks() {
-    check_packages
-    check_dkms_status
-    check_system_upgrade
-    STEP="1"
-}
-
 get_source_list() {
     for file in /etc/apt/sources.list /etc/apt/sources.list.d/*.list
     do
