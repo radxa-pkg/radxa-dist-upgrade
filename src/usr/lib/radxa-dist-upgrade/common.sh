@@ -17,9 +17,8 @@ checks() {
 }
 
 check_packages() {
-    local product package
-    product="$(tr $"\0" $"\n" < /proc/device-tree/compatible | tail -n 2 | head -n 1 | cut -d "," -f 2)"
-    package="task-$product"
+    local package
+    package="task-$(get_product_id)"
 
     if [[ "$(dpkg --get-selections "$package" | awk '{print $2}')" == "install" ]]
     then
