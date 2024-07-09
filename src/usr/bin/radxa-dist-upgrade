@@ -15,7 +15,6 @@ else
     source "/usr/lib/librtui/tui.sh"
 fi
 
-
 # shellcheck source=src/usr/lib/radxa-dist-upgrade/bullseye.sh
 source "/usr/lib/radxa-dist-upgrade/$(lsb_release -c | awk -F'\t' '{print $2}').sh"
 
@@ -33,7 +32,7 @@ main() {
     menu_add pre_system_upgrade "Pre system upgrade"
     menu_add system_upgrade "System upgrade"
     menu_add post_system_upgrade "Post system upgrade"
-    menu_show ""
+    menu_show "Please select an operation below:"
 }
 
 
@@ -88,4 +87,4 @@ check_dkms_status() {
     fi
 }
 
-tui_start main "Radxa dist upgrade1"
+tui_start main "radxa-dist-upgrade"
