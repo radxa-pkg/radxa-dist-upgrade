@@ -1,31 +1,23 @@
 #!/usr/bin/env bash
-set -e
-
-set -euo pipefail
-shopt -s nullglob
-
-DEBUG="${DEBUG:-false}"
-
-SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-if [[ -f "$SCRIPT_DIR/../src/lib/librtui/tui.sh" ]]; then
-    # shellcheck source=externals/librtui/src/lib/librtui/tui.sh
-    source "$SCRIPT_DIR/../src/lib/librtui/tui.sh"
-else
-    # shellcheck source=externals/librtui/src/lib/librtui/tui.sh
-    source "/usr/lib/librtui/tui.sh"
-fi
-
-# shellcheck source=src/usr/lib/radxa-dist-upgrade/bullseye.sh
-source "/usr/lib/radxa-dist-upgrade/$(lsb_release -c | awk -F'\t' '{print $2}').sh"
-
-export STEP="0"
-export FLAG="1"
-SBC="$(tr $"\0" $"\n" < /proc/device-tree/compatible | head -n 1 | cut -d "," -f 2)"
-export SBC
-SOC="$(curl "https://gate.radxa.com/https://raw.githubusercontent.com/RadxaOS-SDK/rsdk/main/src/share/rsdk/configs/products.json" | yq -e ".[] | select(.product == \"$SBC\").soc" | tr -d '\"')"
-export SOC
 
 main() {
+    set -euo pipefail
+    shopt -s nullglob
+
+    export FLAG="1"
+
+    # shellcheck source=src/usr/lib/radxa-dist-upgrade/common.sh
+    source "/usr/lib/radxa-dist-upgrade/common.sh"
+
+    lib="/usr/lib/radxa-dist-upgrade/$(lsb_release -c | awk -F'\t' '{print $2}').sh"
+    if [[ -f "$lib" ]]; then
+        # shellcheck source=src/usr/lib/radxa-dist-upgrade/bullseye.sh
+        source "$lib"
+    else
+        echo "Unsupported distribution"
+        return 1
+    fi
+
     menu_init
     menu_add checks "Check for upgrade"
     menu_add setup_source_list "Setup source list"
@@ -35,5 +27,17 @@ main() {
     menu_show "Please select an operation below:"
 }
 
+export STEP="0"
+DEBUG="${DEBUG:-false}"
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+
+if [[ -f "$SCRIPT_DIR/../src/lib/librtui/tui.sh" ]]
+then
+    # shellcheck source=externals/librtui/src/lib/librtui/tui.sh
+    source "$SCRIPT_DIR/../src/lib/librtui/tui.sh"
+else
+    # shellcheck source=externals/librtui/src/lib/librtui/tui.sh
+    source "/usr/lib/librtui/tui.sh"
+fi
 
 tui_start main "radxa-dist-upgrade"
