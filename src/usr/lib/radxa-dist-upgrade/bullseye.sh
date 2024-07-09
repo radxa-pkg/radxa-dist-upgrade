@@ -35,6 +35,7 @@ setup_source_list() {
     then
         source_list="$(get_source_list)"
         readarray -t lists <<< "$source_list"
+        export lists
     fi
     index=0
     for list in "${lists[@]}"
@@ -43,8 +44,8 @@ setup_source_list() {
         then
             list="$(process_source "bullseye" "$list" | tail -n 1)"
             list="$list|$index"
+            lists[index]="$list"
         fi
-        lists[index]="$list"
         IFS="|" read -r -a list <<< "$list"
         menu_add setup_source "${list[7]}: ${list[2]} -> ${list[5]}, ${list[3]} -> ${list[6]}"
         index=$((index + 1))
@@ -53,42 +54,6 @@ setup_source_list() {
     menu_show "Please check following source list, and select one to setup"
     FLAG="0"
     STEP="2"
-}
-
-setup_source() {
-    IFS=": " read -r -a index <<< "$RTUI_MENU_SELECTED"
-    IFS="|" read -r -a list <<< "${lists[index[0]]}"
-    item="$(inputbox "Original URL is ""${list[2]}"", Please input the new URL:" "${list[5]}")"
-    list[5]="$item"
-    item="$(inputbox "Original dist is ""${list[3]}"", Please input the new dist:" "${list[6]}")"
-    list[6]="$item"
-    lists[index[0]]="${list[0]}|${list[1]}|${list[2]}|${list[3]}|${list[4]}|${list[5]}|${list[6]}|${list[7]}"
-    msgbox "${lists[*]}"
-}
-
-save_source_list() {
-    if yesno "Rename all sources.list to *.bak"
-    then
-        if [[ -e /etc/apt/sources.list ]]
-        then
-            mv /etc/apt/sources.list /etc/apt/sources.list.bak
-        fi
-
-        for source in /etc/apt/sources.list.d/*.list
-        do
-            mv "$source" "$source.bak"
-        done
-    fi
-
-    for list in "${lists[@]}"
-    do
-        IFS="|" read -r -a list <<< "$list"
-        if yesno "Save \"deb ${list[1]} ${list[5]} ${list[6]} ${list[4]}\" to ${list[0]}"
-        then
-            echo "deb ${list[1]} ${list[5]} ${list[6]} ${list[4]}" > "${list[0]}"
-        fi
-    done
-    msgbox "Source list saved."
 }
 
 system_upgrade() {
