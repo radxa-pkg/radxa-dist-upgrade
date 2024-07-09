@@ -69,32 +69,32 @@ check_dkms_status() {
 process_source() {
     local original="$1" list="$2"
     IFS="|" read -r -a list <<< "$list"
-    list[0]="${list[0]//$original/$RELEASE}"
-    list[5]="${list[2]//$original/$RELEASE}"
-    list[6]="${list[3]//$original/$RELEASE}"
+    list[0]="${list[0]//$original/$TARGET_RELEASE}"
+    list[5]="${list[2]//$original/$TARGET_RELEASE}"
+    list[6]="${list[3]//$original/$TARGET_RELEASE}"
 
     if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -q "rk3588" <<< "$(get_product_soc)"
     then
-        list[5]="${list[5]//$RELEASE/$(get_product_soc)-$RELEASE}"
+        list[5]="${list[5]//$TARGET_RELEASE/$(get_product_soc)-$TARGET_RELEASE}"
         list[6]="${list[6]//rockchip/$(get_product_soc)}"
         list[0]="/etc/apt/sources.list.d/80-$(basename "${list[0]}")"
     elif grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -e "rk3582" <<< "$(get_product_soc)"
     then
-        list[5]="${list[5]//$RELEASE/rk3582-$RELEASE}"
+        list[5]="${list[5]//$TARGET_RELEASE/rk3582-$TARGET_RELEASE}"
         list[6]="${list[6]//rockchip/rk3582}"
         list[0]="/etc/apt/sources.list.d/80-$(basename "${list[0]}")"
     fi
 
-    if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && [[ "${list[6]}" == "$RELEASE" ]]
+    if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && [[ "${list[6]}" == "$TARGET_RELEASE" ]]
     then
         list[0]="/etc/apt/sources.list.d/70-$(basename "${list[0]}")"
     fi
 
-    if grep -q "/debian" <<< "${list[2]}" && grep -e "$RELEASE" <<< "${list[6]}"
+    if grep -q "/debian" <<< "${list[2]}" && grep -e "$TARGET_RELEASE" <<< "${list[6]}"
     then
-        if [[ "${list[6]}" == "$RELEASE" ]]
+        if [[ "${list[6]}" == "$TARGET_RELEASE" ]]
         then
-            list[0]="/etc/apt/sources.list.d/$RELEASE.list"
+            list[0]="/etc/apt/sources.list.d/$TARGET_RELEASE.list"
         fi
         list[0]="/etc/apt/sources.list.d/50-$(basename "${list[0]}")"
     fi

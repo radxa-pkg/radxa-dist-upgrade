@@ -81,7 +81,7 @@ post_system_upgrade() {
         return
     fi
 
-    if ! grep -q "rk3588" <<< "$(get_product_soc)" && [[ "$RELEASE" == "bookworm" ]]
+    if ! grep -q "rk3588" <<< "$(get_product_soc)" && [[ "$TARGET_RELEASE" == "bookworm" ]]
     then
         apt-get update && apt-get install gdm
     fi
