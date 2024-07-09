@@ -46,12 +46,12 @@ setup_source_list() {
             list[5]="${list[2]//bullseye/$RELEASE}"
             list[6]="${list[3]//bullseye/$RELEASE}"
 
-            if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -q "rk3588" <<< "$SOC"
+            if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -q "rk3588" <<< "$(get_product_soc)"
             then
-                list[5]="${list[5]//$RELEASE/$SOC-$RELEASE}"
-                list[6]="${list[6]//rockchip/$SOC}"
+                list[5]="${list[5]//$RELEASE/$(get_product_soc)-$RELEASE}"
+                list[6]="${list[6]//rockchip/$(get_product_soc)}"
                 list[0]="/etc/apt/sources.list.d/80-$(basename "${list[0]}")"
-            elif grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -e "rk3582" <<< "$SOC"
+            elif grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -e "rk3582" <<< "$(get_product_soc)"
             then
                 list[5]="${list[5]//$RELEASE/rk3582-$RELEASE}"
                 list[6]="${list[6]//rockchip/rk3582}"
@@ -154,7 +154,7 @@ post_system_upgrade() {
         msgbox "Please run \"System upgrade\" first."
         return
     fi
-    if ! grep -q "rk3588" <<< "$SOC" && [[ "$RELEASE" == "bookworm" ]]
+    if ! grep -q "rk3588" <<< "$(get_product_soc)" && [[ "$RELEASE" == "bookworm" ]]
     then
         apt-get update && apt-get install gdm
     fi
