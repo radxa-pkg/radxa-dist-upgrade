@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+import re, aptsources.sourceslist
+try:
+    sources=aptsources.sourceslist.SourcesList(deb822=False)
+except TypeError:
+    sources=aptsources.sourceslist.SourcesList()
+sources.list.sort(key=lambda x: (x.file, x.uri, x.dist))
+for source in sources.list:
+    if source.type == "deb":
+        print(source.file, end="|")
+        gpg=source.mysplit(source.line)[1]
+        if re.match(r"\[signed-by=.*\]", gpg):
+            print(gpg, end="|")
+        else:
+            print("", end="|")
+        print(source.uri+"|"+source.dist+"|"+" ".join([str(i) for i in source.comps]))
