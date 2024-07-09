@@ -9,12 +9,11 @@ main() {
     # shellcheck source=src/usr/lib/radxa-dist-upgrade/common.sh
     source "/usr/lib/radxa-dist-upgrade/common.sh"
 
-    lib="/usr/lib/radxa-dist-upgrade/$(lsb_release -c | awk -F'\t' '{print $2}').sh"
-    if [[ -f "$lib" ]]; then
-        # shellcheck source=src/usr/lib/radxa-dist-upgrade/bullseye.sh
-        source "$lib"
-    else
-        echo "Unsupported distribution"
+    local distro
+    distro="$(lsb_release -c | awk -F'\t' '{print $2}')"
+    # shellcheck source=src/usr/lib/radxa-dist-upgrade/bullseye.sh
+    if ! source "/usr/lib/radxa-dist-upgrade/$distro.sh"; then
+        echo "$distro is currently unsupported." >&2
         return 1
     fi
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-RELEASE="bookworm"
+export TARGET_RELEASE="bookworm"
 
 get_source_list() {
     for file in /etc/apt/sources.list /etc/apt/sources.list.d/*.list
