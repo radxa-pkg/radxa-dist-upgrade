@@ -26,7 +26,7 @@ get_source_list() {
 setup_source_list() {
     if [[ "$STEP" != "1" ]] && [[ "$STEP" != "2" ]]
     then
-        echo "Please run \"Check for upgrade\" first."
+        msgbox "Please run \"Check for upgrade\" first. $STEP"
         return
     fi
 
@@ -39,41 +39,13 @@ setup_source_list() {
     index=0
     for list in "${lists[@]}"
     do
-        IFS="|" read -r -a list <<< "$list"
         if [[ $FLAG == "1" ]]
         then
-            list[0]="${list[0]//bullseye/$RELEASE}"
-            list[5]="${list[2]//bullseye/$RELEASE}"
-            list[6]="${list[3]//bullseye/$RELEASE}"
-
-            if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -q "rk3588" <<< "$(get_product_soc)"
-            then
-                list[5]="${list[5]//$RELEASE/$(get_product_soc)-$RELEASE}"
-                list[6]="${list[6]//rockchip/$(get_product_soc)}"
-                list[0]="/etc/apt/sources.list.d/80-$(basename "${list[0]}")"
-            elif grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -e "rk3582" <<< "$(get_product_soc)"
-            then
-                list[5]="${list[5]//$RELEASE/rk3582-$RELEASE}"
-                list[6]="${list[6]//rockchip/rk3582}"
-                list[0]="/etc/apt/sources.list.d/80-$(basename "${list[0]}")"
-            fi
-
-            if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && [[ "${list[6]}" == "$RELEASE" ]]
-            then
-                list[0]="/etc/apt/sources.list.d/70-$(basename "${list[0]}")"
-            fi
-
-            if grep -q "/debian" <<< "${list[2]}" && grep -e "$RELEASE" <<< "${list[6]}"
-            then
-                if [[ "${list[6]}" == "$RELEASE" ]]
-                then
-                    list[0]="/etc/apt/sources.list.d/$RELEASE.list"
-                fi
-                list[0]="/etc/apt/sources.list.d/50-$(basename "${list[0]}")"
-            fi
-            list[7]="$index"
-            lists[index]="${list[0]}|${list[1]}|${list[2]}|${list[3]}|${list[4]}|${list[5]}|${list[6]}|${list[7]}"
+            list="$(process_source "bullseye" "$list" | tail -n 1)"
+            list="$list|$index"
         fi
+        lists[index]="$list"
+        IFS="|" read -r -a list <<< "$list"
         menu_add setup_source "${list[7]}: ${list[2]} -> ${list[5]}, ${list[3]} -> ${list[6]}"
         index=$((index + 1))
     done
