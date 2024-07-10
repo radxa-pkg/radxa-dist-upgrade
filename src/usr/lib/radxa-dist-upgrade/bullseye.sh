@@ -2,27 +2,6 @@
 
 export TARGET_RELEASE="bookworm"
 
-# get_source_list() {
-#     for file in /etc/apt/sources.list /etc/apt/sources.list.d/*.list
-#     do
-#         grep -oP "^\s*deb\s+\K.*" "$file"| awk -v file="$file" '{
-#             if ($1 ~ /signed-by=/) {
-#                 remaining = ""
-#                 for (i = 4; i <= NF; i++) {
-#                     remaining = remaining $i " "
-#                 }
-#                 print file "|" $1 "|" $2 "|" $3 "|" remaining
-#             } else {
-#                 remaining = ""
-#                 for (i = 3; i <= NF; i++) {
-#                     remaining = remaining $i " "
-#                 }
-#                 print file "|" "" "|" $1 "|" $2 "|" remaining
-#             }
-#         }'
-#     done
-# }
-
 setup_source_list() {
     if [[ "$STEP" != "1" ]] && [[ "$STEP" != "2" ]]
     then
