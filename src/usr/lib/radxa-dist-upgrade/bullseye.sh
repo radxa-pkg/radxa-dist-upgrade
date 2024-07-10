@@ -3,7 +3,7 @@
 export TARGET_RELEASE="bookworm"
 
 setup_source_list() {
-    if [[ "$STEP" != "1" ]] && [[ "$STEP" != "2" ]]
+    if [[ "$STEP" != "2" ]] && [[ "$STEP" != "3" ]]
     then
         msgbox "Please run \"Check for upgrade\" first. $STEP"
         return
@@ -32,11 +32,11 @@ setup_source_list() {
     menu_add "save_source_list" "Save source list"
     menu_show "Please check following source list, and select one to setup"
     FLAG="0"
-    STEP="2"
+    STEP="3"
 }
 
 pre_system_upgrade() {
-    if [[ "$STEP" != "2" ]]
+    if [[ "$STEP" != "3" ]]
     then
         msgbox "Please run \"Setup source list\" first."
         return
@@ -50,11 +50,11 @@ pre_system_upgrade() {
         echo "Unable to install dpkg."
         return 1
     fi
-    STEP="3"
+    STEP="4"
 }
 
 post_system_upgrade() {
-    if [[ "$STEP" != "4" ]]
+    if [[ "$STEP" != "6" ]]
     then
         msgbox "Please run \"System upgrade\" first."
         return
@@ -64,4 +64,5 @@ post_system_upgrade() {
     then
         apt-get update && apt-get install gdm
     fi
+    STEP="7"
 }

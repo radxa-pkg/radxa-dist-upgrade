@@ -25,11 +25,22 @@ main() {
         return 1
     fi
 
+    if [[ "$STEP" == "7" ]]
+    then
+        if yesno "Upgrade complete. Please reboot your system."
+        then
+            reboot
+        else
+            exit 0
+        fi
+    fi
+
     menu_init
     menu_add checks "Check for upgrade"
+    menu_add check_system_upgrade "System upgrade"
     menu_add setup_source_list "Setup source list"
     menu_add pre_system_upgrade "Pre system upgrade"
-    menu_add system_upgrade "System upgrade"
+    menu_add system_dist_upgrade "System distribution upgrade"
     menu_add post_system_upgrade "Post system upgrade"
     menu_show "Please select an operation below:"
 }

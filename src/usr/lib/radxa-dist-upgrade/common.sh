@@ -12,7 +12,6 @@ get_product_soc() {
 checks() {
     check_packages
     check_dkms_status
-    check_system_upgrade
     export STEP="1"
 }
 
@@ -42,6 +41,12 @@ check_packages() {
 }
 
 check_system_upgrade() {
+    if [[ "$STEP" != "1" ]]
+    then
+        msgbox "Please run \"Pre system upgrade\" first."
+        return
+    fi
+
     apt-get update
     upgradable="$(apt-get -s upgrade)"
 
@@ -53,6 +58,7 @@ check_system_upgrade() {
             system_upgrade
         fi
     fi
+    STEP="2"
 }
 
 check_dkms_status() {
@@ -137,12 +143,16 @@ save_source_list() {
 }
 
 system_upgrade() {
-    if [[ "$STEP" != "3" ]] && [[ "$STEP" != "0" ]]
+    rsetup system_update
+    apt-get autoremove
+}
+
+system_dist_upgrade() {
+    if [[ "$STEP" != "4" ]]
     then
         msgbox "Please run \"Pre system upgrade\" first."
         return
     fi
-    rsetup system_update
-    apt-get autoremove
-    STEP="4"
+    system_upgrade
+    STEP="5"
 }
