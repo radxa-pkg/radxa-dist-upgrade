@@ -5,8 +5,8 @@ get_product_id() {
 }
 
 get_product_soc() {
-    data="$(curl -s "https://gate.radxa.com/https://raw.githubusercontent.com/RadxaOS-SDK/rsdk/main/src/share/rsdk/configs/products.json")"
-    yq -e ".[] | select(.product == \"$(get_product_id)\").soc" <<< "$data"
+    curl -s "https://gate.radxa.com/https://raw.githubusercontent.com/RadxaOS-SDK/rsdk/main/src/share/rsdk/configs/products.json" | \
+    jq -r ".[] | select(.product == \"$(get_product_id)\").soc"
 }
 
 checks() {
