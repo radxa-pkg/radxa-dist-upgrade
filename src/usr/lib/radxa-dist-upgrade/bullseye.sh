@@ -1,32 +1,31 @@
 #!/usr/bin/env bash
 
 export TARGET_RELEASE="bookworm"
-export SOURCED=""
+export SOURCE_LISTS=()
 
 setup_source_list() {
     menu_init
-    if [[ -z $SOURCED ]]
+
+    if [[ ${#SOURCE_LISTS[@]} == 0 ]]
     then
-        source_list="$(get_source_list)"
-        readarray lists <<< "$source_list"
-        export lists
-    fi
-    index=0
-    for list in "${lists[@]}"
-    do
-        if [[ -z $SOURCED ]]
-        then
+        local index=0
+        readarray SOURCE_LISTS <<< "$(get_source_list)"
+        for list in "${SOURCE_LISTS[@]}"
+        do
             list="$(process_source "bullseye" "$list" | tail -n 1)"
             list="$list|$index"
-            lists[index]="$list"
-        fi
+            SOURCE_LISTS[index]="$list"
+            index=$((index + 1))
+        done
+    fi
+
+    for list in "${SOURCE_LISTS[@]}"
+    do
         IFS="|" read -r -a list <<< "$list"
         menu_add setup_source "${list[7]}: ${list[2]} -> ${list[5]}, ${list[3]} -> ${list[6]}"
-        index=$((index + 1))
     done
     menu_add "save_source_list" "Save source list"
     menu_show "Please check following source list, and select one to setup"
-    export SOURCED="1"
 }
 
 pre_system_upgrade() {
