@@ -11,8 +11,16 @@ main() {
 
     local distro
     distro="$(lsb_release -c | awk -F'\t' '{print $2}')"
+
+    # To fix make debug can't source $distro.sh
+    if [[ "$DEBUG" == "true" ]] && [[ "$distro" == "n/a" ]]
+    then
+        distro="bullseye"
+    fi
+
     # shellcheck source=src/usr/lib/radxa-dist-upgrade/bullseye.sh
-    if ! source "/usr/lib/radxa-dist-upgrade/$distro.sh"; then
+    if ! source "/usr/lib/radxa-dist-upgrade/$distro.sh"
+    then
         echo "$distro is currently unsupported." >&2
         return 1
     fi
