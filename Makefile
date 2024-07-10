@@ -25,7 +25,7 @@ run: OVERLAY_CMD := radxa-dist-upgrade
 run: overlay
 
 .PHONY: debug
-debug: OVERLAY_CMD := bash -c "DEBUG=true /usr/bin/radxa-dist-upgrade"
+debug: OVERLAY_CMD := bash -c "DISTRO=$(DISTRO) DEBUG=true /usr/bin/radxa-dist-upgrade"
 debug: overlay
 
 .PHONY: shell
