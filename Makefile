@@ -21,7 +21,7 @@ overlay:
 	rmdir $(OVERLAY_DIR)
 
 .PHONY: run
-run: OVERLAY_CMD := radxa-dist-upgrade
+run: OVERLAY_CMD := bash -c "DISTRO=$(DISTRO) radxa-dist-upgrade"
 run: overlay
 
 .PHONY: debug
