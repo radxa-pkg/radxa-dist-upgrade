@@ -27,7 +27,6 @@ main() {
     menu_show "Please select an operation below:"
 }
 
-export STEP="0"
 DEBUG="${DEBUG:-false}"
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 

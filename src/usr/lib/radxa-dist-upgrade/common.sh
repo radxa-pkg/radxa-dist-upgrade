@@ -13,7 +13,6 @@ checks() {
     check_packages
     check_dkms_status
     check_system_upgrade
-    export STEP="1"
 }
 
 check_packages() {
@@ -137,12 +136,6 @@ save_source_list() {
 }
 
 system_upgrade() {
-    if [[ "$STEP" != "3" ]] && [[ "$STEP" != "0" ]]
-    then
-        msgbox "Please run \"Pre system upgrade\" first."
-        return
-    fi
     rsetup system_update
     apt-get autoremove
-    STEP="4"
 }
