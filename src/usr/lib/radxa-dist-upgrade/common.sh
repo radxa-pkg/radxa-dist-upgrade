@@ -101,13 +101,12 @@ process_source() {
 }
 
 setup_source() {
-    IFS=": " read -r -a index <<< "$RTUI_MENU_SELECTED"
-    IFS="|" read -r -a list <<< "${SOURCE_LISTS[index[0]]}"
+    IFS="|" read -r -a list <<< "${SOURCE_LISTS[RTUI_MENU_SELECTED_INDEX]}"
     item="$(inputbox "Original URL is ""${list[2]}"", Please input the new URL:" "${list[5]}")"
     list[5]="$item"
     item="$(inputbox "Original dist is ""${list[3]}"", Please input the new dist:" "${list[6]}")"
     list[6]="$item"
-    SOURCE_LISTS[index[0]]="${list[0]}|${list[1]}|${list[2]}|${list[3]}|${list[4]}|${list[5]}|${list[6]}|${list[7]}"
+    SOURCE_LISTS[RTUI_MENU_SELECTED_INDEX]="${list[0]}|${list[1]}|${list[2]}|${list[3]}|${list[4]}|${list[5]}|${list[6]}"
 }
 
 save_source_list() {

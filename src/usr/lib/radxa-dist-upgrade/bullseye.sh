@@ -13,7 +13,6 @@ setup_source_list() {
         for list in "${SOURCE_LISTS[@]}"
         do
             list="$(process_source "bullseye" "$list" | tail -n 1)"
-            list="$list|$index"
             SOURCE_LISTS[index]="$list"
             index=$((index + 1))
         done
@@ -22,7 +21,7 @@ setup_source_list() {
     for list in "${SOURCE_LISTS[@]}"
     do
         IFS="|" read -r -a list <<< "$list"
-        menu_add setup_source "${list[7]}: ${list[2]} -> ${list[5]}, ${list[3]} -> ${list[6]}"
+        menu_add setup_source "${list[5]} ${list[6]}"
     done
     menu_add "save_source_list" "Save source list"
     menu_show "Please check following source list, and select one to setup"
