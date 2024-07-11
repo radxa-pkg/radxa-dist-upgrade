@@ -14,10 +14,10 @@ Architecture: all
 Section: misc
 Priority: optional
 Depends: jq,
-         librtui (>=0.1.4),
+         librtui (>=0.1.5),
          python3,
          python3-apt,
-         rsetup (>>0.4.7),
+         rsetup (>=0.4.8),
          ${misc:Depends},
 Description: Radxa OS upgrade tools, which allow users to upgrade their
  Radxa devices to the latest version of the operating system. The tools
