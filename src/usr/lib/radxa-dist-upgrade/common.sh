@@ -86,10 +86,7 @@ save_source_list() {
     for list in "${SOURCE_LISTS[@]}"
     do
         IFS="|" read -r -a list <<< "$list"
-        if yesno "Save \"deb ${list[1]} ${list[5]} ${list[6]} ${list[4]}\" to ${list[0]}"
-        then
-            echo "deb ${list[1]} ${list[5]} ${list[6]} ${list[4]}" > "${list[0]}"
-        fi
+        echo "deb ${list[1]} ${list[5]} ${list[6]} ${list[4]}" > "${list[0]}"
     done
     msgbox "Source list saved."
 }
