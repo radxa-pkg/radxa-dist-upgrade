@@ -10,34 +10,8 @@ get_product_soc() {
 }
 
 checks() {
-    check_packages
     check_dkms_status
     check_system_upgrade
-}
-
-check_packages() {
-    local package
-    package="task-$(get_product_id)"
-
-    if [[ "$(dpkg --get-selections "$package" | awk '{print $2}')" == "install" ]]
-    then
-        echo "$package is installed."
-    else
-        if yesno "$package is not installed. Do you want to install it?"
-        then
-            echo "Installing $package"
-            if apt-get install -y "$package"
-            then
-                echo "$package installed."
-            else
-                echo "Failed to install $package."
-                return 1
-            fi
-        else
-            echo "Skipping $package installation."
-            return 1
-        fi
-    fi
 }
 
 check_system_upgrade() {
