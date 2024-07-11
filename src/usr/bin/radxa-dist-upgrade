@@ -26,6 +26,16 @@ main() {
     menu_show "Please select an operation below:"
 }
 
+if (( EUID != 0 ))
+then
+    if [[ -n "${DISPLAY:-}" ]] && [[ -z "${SSH_TTY:-}" ]]
+    then
+        exec pkexec "$0" "$@"
+    else
+        exec sudo "$0" "$@"
+    fi
+fi
+
 DEBUG="${DEBUG:-false}"
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 
@@ -37,5 +47,4 @@ else
     # shellcheck source=externals/librtui/src/lib/librtui/tui.sh
     source "/usr/lib/librtui/tui.sh"
 fi
-
 tui_start main "radxa-dist-upgrade"
