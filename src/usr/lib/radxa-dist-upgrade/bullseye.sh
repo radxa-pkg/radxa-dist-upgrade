@@ -40,8 +40,8 @@ pre_system_upgrade() {
 }
 
 post_system_upgrade() {
-    if ! grep -q "rk3588" <<< "$(get_product_soc)"
+    if grep -q "rk3588" <<< "$(get_product_soc)"
     then
-        apt-get update && apt-get install gdm
+        apt-get update && apt-get install gdm3
     fi
 }
