@@ -96,5 +96,4 @@ save_source_list() {
 
 system_upgrade() {
     rsetup system_update
-    apt-get autoremove
 }
