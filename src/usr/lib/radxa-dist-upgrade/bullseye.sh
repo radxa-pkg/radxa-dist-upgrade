@@ -31,7 +31,9 @@ setup_source_list() {
 
 pre_system_upgrade() {
     apt-get update
+    apt-get install --download-only rtw89-dkms
     apt-get remove 8852be-dkms
+    apt-get install rtw89-dkms
 
     if ! apt-get install dpkg
     then
