@@ -11,21 +11,7 @@ get_product_soc() {
 
 checks() {
     check_dkms_status
-    check_system_upgrade
-}
-
-check_system_upgrade() {
-    apt-get update
-    upgradable="$(apt-get -s upgrade)"
-
-    if echo "$upgradable" | grep -q "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded"; then
-        echo "All packages are up to date."
-    else
-        if yesno "Some packages are not up to date, please upgrade first"
-        then
-            system_upgrade
-        fi
-    fi
+    system_upgrade
 }
 
 check_dkms_status() {
