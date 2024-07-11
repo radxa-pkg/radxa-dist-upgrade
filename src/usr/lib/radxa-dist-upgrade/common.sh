@@ -70,23 +70,30 @@ setup_source() {
 }
 
 save_source_list() {
-    if yesno "Rename all sources.list to *.bak"
-    then
-        if [[ -e /etc/apt/sources.list ]]
+    for list in "${SOURCE_LISTS[@]}"
+    do
+        IFS="|" read -r -a list <<< "$list"
+        if ! curl -s -f "${list[5]}/dists/${list[6]}/Release" -o /dev/null
         then
-            mv /etc/apt/sources.list /etc/apt/sources.list.bak
+            msgbox "Can't access ${list[5]}/dists/${list[6]}/Release, please check the URL and dist."
+            return
         fi
+    done
 
-        for source in /etc/apt/sources.list.d/*.list
-        do
-            mv "$source" "$source.bak"
-        done
+    if [[ -e /etc/apt/sources.list ]]
+    then
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak
     fi
+
+    for source in /etc/apt/sources.list.d/*.list
+    do
+        mv "$source" "$source.bak"
+    done
 
     for list in "${SOURCE_LISTS[@]}"
     do
         IFS="|" read -r -a list <<< "$list"
-        echo "deb ${list[1]} ${list[5]} ${list[6]} ${list[4]}" > "${list[0]}"
+        echo "deb ${list[1]} ${list[2]} ${list[5]} ${list[6]} ${list[4]}" > "${list[0]}"
     done
     msgbox "Source list saved."
 }

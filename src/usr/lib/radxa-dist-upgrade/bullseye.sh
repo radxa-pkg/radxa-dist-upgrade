@@ -23,8 +23,7 @@ setup_source_list() {
         IFS="|" read -r -a list <<< "$list"
         menu_add setup_source "${list[5]} ${list[6]}"
     done
-
-    if menu_show "Please check following source list, and select one to setup"
+    if ! menu_show "Please check following source list, and select one to setup"
     then
         save_source_list
     fi
