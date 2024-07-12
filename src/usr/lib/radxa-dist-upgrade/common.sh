@@ -27,15 +27,10 @@ process_source() {
     list[5]="${list[2]//$original/$TARGET_RELEASE}"
     list[6]="${list[3]//$original/$TARGET_RELEASE}"
 
-    if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -q "rk3588" <<< "$(get_product_soc)"
+    if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -q "rk3588" -q "rk3582" -q "rk3528a"<<< "$(get_product_soc)"
     then
         list[5]="${list[5]//$TARGET_RELEASE/$(get_product_soc)-$TARGET_RELEASE}"
         list[6]="${list[6]//rockchip/$(get_product_soc)}"
-        list[0]="/etc/apt/sources.list.d/80-$(basename "${list[0]}")"
-    elif grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -e "rk3582" <<< "$(get_product_soc)"
-    then
-        list[5]="${list[5]//$TARGET_RELEASE/rk3582-$TARGET_RELEASE}"
-        list[6]="${list[6]//rockchip/rk3582}"
         list[0]="/etc/apt/sources.list.d/80-$(basename "${list[0]}")"
     fi
 
