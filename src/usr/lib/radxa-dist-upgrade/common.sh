@@ -61,13 +61,20 @@ setup_source() {
 }
 
 check_source_worker() {
+    __lock_fd "$mutex"
+
     if ! curl -Lsqf "$1" -o /dev/null
     then
+        echo "${list[5]}/dists/${list[6]}/Release," >> "$mutex"
+		__unlock_fd
         return 1
     fi
 }
 
 save_source_list() {
+    local mutex
+	mutex="$(mktemp)"
+
     for list in "${SOURCE_LISTS[@]}"
     do
         IFS="|" read -r -a list <<< "$list"
@@ -76,9 +83,11 @@ save_source_list() {
     done
 
     if ! __wait_parallel; then
-        msgbox "Can't access ${list[5]}/dists/${list[6]}/Release, please check the URL and dist."
+        msgbox "Can't access $(cat "$mutex") please check the URL and dist."
         return 1
 	fi
+
+    rm "$mutex"
 
     if [[ -e /etc/apt/sources.list ]]
     then
