@@ -73,7 +73,7 @@ save_source_list() {
     for list in "${SOURCE_LISTS[@]}"
     do
         IFS="|" read -r -a list <<< "$list"
-        if ! curl -s -f "${list[5]}/dists/${list[6]}/Release" -o /dev/null
+        if ! curl -Lsqf "${list[5]}/dists/${list[6]}/Release" -o /dev/null
         then
             msgbox "Can't access ${list[5]}/dists/${list[6]}/Release, please check the URL and dist."
             return
