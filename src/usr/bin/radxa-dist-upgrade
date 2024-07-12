@@ -4,6 +4,17 @@ main() {
     set -euo pipefail
     shopt -s nullglob
 
+    if (( EUID != 0 ))
+    then
+        if [[ -n "${DISPLAY:-}" ]] && [[ -z "${SSH_TTY:-}" ]]
+        then
+            exec pkexec "$0" "$@"
+        else
+            exec sudo "$0" "$@"
+        fi
+    fi
+
+    DEBUG="${DEBUG:-false}"
     export PATH="$PATH:$SCRIPT_DIR/../lib/radxa-dist-upgrade"
     # shellcheck source=src/usr/lib/radxa-dist-upgrade/common.sh
     source "/usr/lib/radxa-dist-upgrade/common.sh"
@@ -26,17 +37,6 @@ main() {
     menu_show "Please select an operation below:"
 }
 
-if (( EUID != 0 ))
-then
-    if [[ -n "${DISPLAY:-}" ]] && [[ -z "${SSH_TTY:-}" ]]
-    then
-        exec pkexec "$0" "$@"
-    else
-        exec sudo "$0" "$@"
-    fi
-fi
-
-DEBUG="${DEBUG:-false}"
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 
 if [[ -f "$SCRIPT_DIR/../src/lib/librtui/tui.sh" ]]
