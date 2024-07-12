@@ -4,29 +4,33 @@ export TARGET_RELEASE="bookworm"
 export SOURCE_LISTS=()
 
 setup_source_list() {
-    menu_init
+    while true
+    do
+        menu_init
 
-    if [[ ${#SOURCE_LISTS[@]} == 0 ]]
-    then
-        local index=0
-        readarray SOURCE_LISTS <<< "$(get_source_list)"
+        if [[ ${#SOURCE_LISTS[@]} == 0 ]]
+        then
+            local index=0
+            readarray SOURCE_LISTS <<< "$(get_source_list)"
+            for list in "${SOURCE_LISTS[@]}"
+            do
+                list="$(process_source "bullseye" "$list" | tail -n 1)"
+                SOURCE_LISTS[index]="$list"
+                index=$((index + 1))
+            done
+        fi
+
         for list in "${SOURCE_LISTS[@]}"
         do
-            list="$(process_source "bullseye" "$list" | tail -n 1)"
-            SOURCE_LISTS[index]="$list"
-            index=$((index + 1))
+            IFS="|" read -r -a list <<< "$list"
+            menu_add setup_source "${list[5]} ${list[6]}"
         done
-    fi
-
-    for list in "${SOURCE_LISTS[@]}"
-    do
-        IFS="|" read -r -a list <<< "$list"
-        menu_add setup_source "${list[5]} ${list[6]}"
+        if ! menu_call "Please check following source list, and select one to setup"
+        then
+            save_source_list
+            break
+        fi
     done
-    if ! menu_show "Please check following source list, and select one to setup"
-    then
-        save_source_list
-    fi
 }
 
 pre_system_upgrade() {
