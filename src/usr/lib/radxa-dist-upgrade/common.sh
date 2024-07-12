@@ -65,16 +65,25 @@ setup_source() {
     SOURCE_LISTS[RTUI_MENU_SELECTED_INDEX]="${list[0]}|${list[1]}|${list[2]}|${list[3]}|${list[4]}|${list[5]}|${list[6]}"
 }
 
+check_source_worker() {
+    if ! curl -Lsqf "$1" -o /dev/null
+    then
+        return 1
+    fi
+}
+
 save_source_list() {
     for list in "${SOURCE_LISTS[@]}"
     do
         IFS="|" read -r -a list <<< "$list"
-        if ! curl -Lsqf "${list[5]}/dists/${list[6]}/Release" -o /dev/null
-        then
-            msgbox "Can't access ${list[5]}/dists/${list[6]}/Release, please check the URL and dist."
-            return
-        fi
+        __request_parallel
+		check_source_worker "${list[5]}/dists/${list[6]}/Release" &
     done
+
+    if ! __wait_parallel; then
+        msgbox "Can't access ${list[5]}/dists/${list[6]}/Release, please check the URL and dist."
+        return 1
+	fi
 
     if [[ -e /etc/apt/sources.list ]]
     then
