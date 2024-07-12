@@ -35,13 +35,21 @@ setup_source_list() {
 
 pre_system_upgrade() {
     apt-get update
-    apt-get install --download-only rtw89-dkms
-    apt-get remove 8852be-dkms
-    apt-get install rtw89-dkms
-
-    if ! apt-get install dpkg
+    if ! apt-get install --download-only rtw89-dkms dpkg
     then
-        echo "Unable to install dpkg."
+        msgbox "Unable to download rtw89-dkms or dpkg."
+        return 1
+    fi
+
+    if ! apt-get remove 8852be-dkms
+    then
+        msgbox "Unable to remove 8852be-dkms."
+        return 1
+    fi
+
+    if ! apt-get install rtw89-dkms dpkg
+    then
+        msgbox "Unable to install rtw89-dkms or dpkg."
         return 1
     fi
 }
