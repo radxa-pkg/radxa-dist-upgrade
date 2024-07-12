@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-get_product_id() {
-    rsetup get_product_id
-}
-
 get_product_soc() {
     curl -s "https://gate.radxa.com/https://raw.githubusercontent.com/RadxaOS-SDK/rsdk/main/src/share/rsdk/configs/products.json" | \
-    jq -r ".[] | select(.product == \"$(get_product_id)\").soc"
+    jq -r ".[] | select(.product == \"$(rsetup get_product_id)\").soc"
 }
 
 checks() {
