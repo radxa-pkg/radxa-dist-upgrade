@@ -6,7 +6,6 @@ get_product_soc() {
 }
 
 checks() {
-    check_dkms_status
     system_upgrade
 }
 
