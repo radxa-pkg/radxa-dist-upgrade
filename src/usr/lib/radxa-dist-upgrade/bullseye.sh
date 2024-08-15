@@ -36,7 +36,11 @@ setup_source_list() {
 pre_system_upgrade() {
     for i in /etc/apt/preferences.d/*
     do
-        mv "$i" "$i.bak"
+        # Prevent backup of .bak, .dpkg-old, .dpkg-new and other files
+        if [[ "$i" != *"."* ]]
+        then
+            mv "$i" "$i.bak"
+        fi
     done
 
     apt-get update
