@@ -4,22 +4,22 @@ main() {
     set -euo pipefail
     shopt -s nullglob
 
+    DEBUG="${DEBUG:-false}"
+    DISTRO="${DISTRO:-$(lsb_release -c | awk -F'\t' '{print $2}')}"
+
     if (( EUID != 0 ))
     then
         if [[ -n "${DISPLAY:-}" ]] && [[ -z "${SSH_TTY:-}" ]]
         then
-            exec pkexec "$0" "$@"
+            exec pkexec "DEBUG=$DEBUG" "DISTRO=$DISTRO" "$0" "$@"
         else
-            exec sudo "$0" "$@"
+            exec sudo "DEBUG=$DEBUG" "DISTRO=$DISTRO" "$0" "$@"
         fi
     fi
 
-    DEBUG="${DEBUG:-false}"
     export PATH="$PATH:$SCRIPT_DIR/../lib/radxa-dist-upgrade"
     # shellcheck source=src/usr/lib/radxa-dist-upgrade/common.sh
     source "/usr/lib/radxa-dist-upgrade/common.sh"
-
-    DISTRO="${DISTRO:-$(lsb_release -c | awk -F'\t' '{print $2}')}"
 
     # shellcheck source=src/usr/lib/radxa-dist-upgrade/bullseye.sh
     if ! source "$SCRIPT_DIR/../lib/radxa-dist-upgrade/$DISTRO.sh"

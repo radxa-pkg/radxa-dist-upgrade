@@ -34,8 +34,13 @@ setup_source_list() {
 }
 
 pre_system_upgrade() {
+    for i in /etc/apt/preferences.d/*
+    do
+        mv "$i" "$i.bak"
+    done
+
     apt-get update
-    if ! apt-get install --download-only rtw89-dkms dpkg
+    if ! apt-get install --download-only rtw89-dkms dpkg task-rk3588
     then
         msgbox "Unable to download rtw89-dkms or dpkg."
         return 1
@@ -47,9 +52,9 @@ pre_system_upgrade() {
         return 1
     fi
 
-    if ! apt-get install rtw89-dkms dpkg
+    if ! apt-get install rtw89-dkms dpkg task-rk3588
     then
-        msgbox "Unable to install rtw89-dkms or dpkg."
+        msgbox "Unable to install rtw89-dkms, dpkg or task-rk3588."
         return 1
     fi
 }
