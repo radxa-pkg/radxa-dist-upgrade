@@ -111,7 +111,13 @@ save_source_list() {
     for list in "${SOURCE_LISTS[@]}"
     do
         IFS="|" read -r -a list <<< "$list"
-        echo "deb ${list[1]} ${list[5]} ${list[6]} ${list[4]}" > "${list[0]}"
+        # Empty key addresses are not saved
+        if [[ -n "${list[1]}" ]]
+        then
+            echo "deb ${list[1]} ${list[5]} ${list[6]} ${list[4]}" > "${list[0]}"
+        else
+            echo "deb ${list[5]} ${list[6]} ${list[4]}" > "${list[0]}"
+        fi
     done
     msgbox "Source list saved."
 }
