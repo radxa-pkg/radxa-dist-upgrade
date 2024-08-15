@@ -26,7 +26,7 @@ process_source() {
     list[5]="${list[2]//$original/$TARGET_RELEASE}"
     list[6]="${list[3]//$original/$TARGET_RELEASE}"
 
-    if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -q "rk3588" -q "rk3582" -q "rk3528a"<<< "$(get_product_soc)"
+    if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && grep -q "rockchip-" <<< "${list[6]}" && grep -q -e "rk3588" -e "rk3582" -e "rk3528a"<<< "$(get_product_soc)"
     then
         list[5]="${list[5]//$TARGET_RELEASE/$(get_product_soc)-$TARGET_RELEASE}"
         list[6]="${list[6]//rockchip/$(get_product_soc)}"
