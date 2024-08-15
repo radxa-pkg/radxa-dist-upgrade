@@ -62,10 +62,15 @@ pre_system_upgrade() {
 post_system_upgrade() {
     if grep -q "rk3588" <<< "$(get_product_soc)"
     then
+        echo "gdm3 shared/default-x-display-manager select gdm3" | debconf-set-selections
         apt-get update
-        apt-get install -y gdm3
-        echo "gdm3 shared/default-x-display-manager select gdm3" debconf-set-selections
+        DEBIAN_FRONTEND=noninteractive apt-get install -y gdm3
         echo "/usr/sbin/gdm3" > "/etc/X11/default-display-manager"
         ln -sf "/lib/systemd/system/gdm3.service" "/etc/systemd/system/display-manager.service"
+    fi
+
+    if yesno "Do you want to reboot now? (recommend)"
+    then
+        reboot
     fi
 }
