@@ -30,12 +30,16 @@ process_source() {
     then
         list[5]="${list[5]//$TARGET_RELEASE/$(get_product_soc)-$TARGET_RELEASE}"
         list[6]="${list[6]//rockchip/$(get_product_soc)}"
-        list[0]="/etc/apt/sources.list.d/80-$(basename "${list[0]}")"
+        # SC2001 (style): See if you can use ${variable//search/replace} instead. But search cannot use regular expressions
+        # shellcheck disable=SC2001
+        list[0]="/etc/apt/sources.list.d/80-$(basename "$(sed 's/^[0-9]\+-//' <<< "${list[0]}")")"
     fi
 
     if grep -q "radxa-archive-keyring.gpg" <<< "${list[1]}" && [[ "${list[6]}" == "$TARGET_RELEASE" ]]
     then
-        list[0]="/etc/apt/sources.list.d/70-$(basename "${list[0]}")"
+        # SC2001 (style): See if you can use ${variable//search/replace} instead. But search cannot use regular expressions
+        # shellcheck disable=SC2001
+        list[0]="/etc/apt/sources.list.d/70-$(basename "$(sed 's/^[0-9]\+-//' <<< "${list[0]}")")"
     fi
 
     if grep -q "/debian" <<< "${list[2]}" && grep -e "$TARGET_RELEASE" <<< "${list[6]}"
@@ -44,7 +48,9 @@ process_source() {
         then
             list[0]="/etc/apt/sources.list.d/$TARGET_RELEASE.list"
         fi
-        list[0]="/etc/apt/sources.list.d/50-$(basename "${list[0]}")"
+        # SC2001 (style): See if you can use ${variable//search/replace} instead. But search cannot use regular expressions
+        # shellcheck disable=SC2001
+        list[0]="/etc/apt/sources.list.d/50-$(basename "$(sed 's/^[0-9]\+-//' <<< "${list[0]}")")"
     fi
 
     echo "${list[0]}|${list[1]}|${list[2]}|${list[3]}|${list[4]}|${list[5]}|${list[6]}"
