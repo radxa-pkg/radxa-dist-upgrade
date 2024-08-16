@@ -66,6 +66,12 @@ pre_system_upgrade() {
 post_system_upgrade() {
     if grep -q "rk3588" <<< "$(get_product_soc)"
     then
+        if ! apt-get remove libmali-valhall-g610-g6p0-x11-gbm
+        then
+            msgbox "Unable to remove libmali-valhall-g610-g6p0-x11-gbm."
+            return 1
+        fi
+
         echo "gdm3 shared/default-x-display-manager select gdm3" | debconf-set-selections
         apt-get update
         DEBIAN_FRONTEND=noninteractive apt-get install -y gdm3
